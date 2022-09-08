@@ -1,3 +1,4 @@
+//express
 var express = require('express');
 var app = express();
 
@@ -9,44 +10,25 @@ app.use(cors());
 app.use(express.urlencoded({extended:true}));
 app.use(express.json());
 
-
+// json file
+var myJson = require('../src/assets/users.json');
 // point static path to dist to serve angular webpage
 app.use(express.static(__dirname + "/../dist/week4tut"));
 console.log(__dirname);
-
+console.log(myJson.users);
 var http = require('http').Server(app);
 var server = http.listen(3000, function(){
     console.log("Server listening on port 3000");
 });
-
 app.post('/api/auth', function(req, res){
     console.log("postlogin here");
     console.log(req.body.email);
     if (!req.body){
         return res.sendStatus(400);
-    }    
-    let Users = [
-        {
-            username: 'Alek',
-            email: 'alek.karoli@gmail.com',
-            ID: 1,
-            Role: "User",
-        },
-        {
-            username: 'Riley',
-            email: 'riley.woltmann@gmail.com',
-            ID: 2,
-            Role: "Super Admin",
-        },
-        {
-            username: 'Ally',
-            email: 'ally.ellis@gmail.com',
-            ID: 3,
-            Role: "Group Admin",   
-        }
-    ]
+    }
+    Users = JSON.parse(JSON.stringify(myJson.users));
     var checkUser = {};
-    //console.log(req.body);
+    console.log(req.body.username);
     checkUser.email = req.body.email;
     checkUser.username = req.body.username;
     
@@ -54,8 +36,7 @@ app.post('/api/auth', function(req, res){
     //console.log(foundUser);
     if(foundUser){
         console.log("Success");
-        //console.log(foundUser);
-        res.send({"valid": true});
+        res.send({"valid": true, "Role": foundUser.Role});
     }else{
         console.log("Incorrect Details");
         res.send({"valid": false});

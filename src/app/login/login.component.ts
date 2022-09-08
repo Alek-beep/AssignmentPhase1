@@ -17,7 +17,7 @@ const BACKEND_URL = 'http://localhost:3000';
 })
 
 export class LoginComponent implements OnInit {
-  userpwd = {email: "", username: ""};
+  userpwd = {email: "", username: "", role:""};
   constructor(private router: Router, private http: HttpClient) { }
 
   ngOnInit(): void {
@@ -30,6 +30,7 @@ export class LoginComponent implements OnInit {
       .subscribe((data: any) => {
         //alert(JSON.stringify(this.userpwd));
         if(data.valid){
+          localStorage.setItem('role', data.Role);
           localStorage.setItem('username', this.userpwd.username);
           localStorage.setItem('email', this.userpwd.email);
           this.router.navigateByUrl('account');

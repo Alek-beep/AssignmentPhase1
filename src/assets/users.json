@@ -1,0 +1,19 @@
+{"users": [{
+    "username" : "Alek",
+    "email": "alek.karoli@gmail.com",
+    "ID": 1,
+    "Role": "User"
+},
+{
+    "username": "Riley",
+    "email": "riley.woltmann@gmail.com",
+    "ID": 2,
+    "Role": "Super Admin"
+},
+{
+    "username": "Ally",
+    "email": "ally.ellis@gmail.com",
+    "ID": 3,
+    "Role": "Group Admin" 
+}
+]}
