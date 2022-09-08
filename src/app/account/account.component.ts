@@ -33,7 +33,7 @@ export class AccountComponent implements OnInit {
       this.http.post('http://localhost:3000/api/add', this.addUserObj)
       .subscribe((data: any) => {
         if(data.valid){
-          alert("User Removed");
+          alert("User Added");
         }else{
           alert("Unable to Add");
         }
@@ -43,14 +43,59 @@ export class AccountComponent implements OnInit {
     }
   }
 
+  public removeGroup(){
+    if(this.userobj.role== "Super Admin" || this.userobj.role == "Group Admin"){
+      this.http.post('http://localhost:3000/api/remove_group', this.addGroupObj)
+      .subscribe((data: any) => {
+        if(data.valid){
+          alert("Group Removed");
+        }else{
+          alert("Unable to Remove");
+        }
+      })
+    } else {
+      alert("You are a: " + this.userobj.role + " so you can not remove user");
+    }
+  }
+
+  public removeUserFromGroup(){
+    if(this.userobj.role== "Super Admin" || this.userobj.role == "Group Admin"){
+      this.http.post('http://localhost:3000/api/remove_user_from_group', this.addGroupObj)
+      .subscribe((data: any) => {
+        if(data.valid){
+          alert("User removed from group");
+        }else{
+          alert("Unable to Remove");
+        }
+      })
+    } else {
+      alert("You are a: " + this.userobj.role + " so you can not remove user");
+    }
+  }
+
+  public removeChannelFromGroup(){
+    if(this.userobj.role== "Super Admin" || this.userobj.role == "Group Admin"){
+      this.http.post('http://localhost:3000/api/remove_channel_from_group', this.addGroupObj)
+      .subscribe((data: any) => {
+        if(data.valid){
+          alert("Channel removed from group");
+        }else{
+          alert("Unable to Remove");
+        }
+      })
+    } else {
+      alert("You are a: " + this.userobj.role + " so you can not remove user");
+    }
+  }
+
   public removeUser(){
     if(this.userobj.role== "Super Admin"){
       this.http.post('http://localhost:3000/api/remove_user', this.addUserObj)
       .subscribe((data: any) => {
         if(data.valid){
-          alert("User Added");
+          alert("User Removed");
         }else{
-          alert("Unable to Add");
+          alert("Unable to Remove");
         }
       })
     } else {
@@ -93,7 +138,7 @@ export class AccountComponent implements OnInit {
       this.http.post('http://localhost:3000/api/add_channel_to_group', this.addGroupObj)
       .subscribe((data: any) => {
         if(data.valid){
-          alert("User Added");
+          alert("Channel Added");
         }else{
           alert("Unable to Add");
         }
@@ -101,5 +146,9 @@ export class AccountComponent implements OnInit {
     } else {
       alert("You are a: " + this.userobj.role + " so you can not add channel to group");
     }
+  }
+
+  public viewGroups(){
+    
   }
 }

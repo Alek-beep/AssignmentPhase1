@@ -1,1 +1,1 @@
-[{"name":"Group1","users":["Alek","Riley","Ally"],"channels":[{"channelName":"Channel1","users":["Alek"]},{"channelName":"Channel2","users":["Riley"]}]},{"name":"Group 2","users":[],"channels":[{"channelName":"","users":[]}]}]
+[{"name":"Group 1","users":["Alek"],"channels":[{"channelName":"Channel 2","users":[]},{"channelName":"Channel 1","users":[]}]}]

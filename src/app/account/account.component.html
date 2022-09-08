@@ -79,6 +79,46 @@
         <!-- Submit button -->
         <button type="button" class="btn btn-primary btn-block mb-4" (click)="addChannelToGroup()">Add Channel</button>
     </form>
+    <form>
+        <h4>Remove Group:</h4>
+        <!-- Group name input -->
+        <div class="form-outline mb-4">
+            <input type="text" [(ngModel)]="addGroupObj.groupName" name="groupName" id="groupName" class="form-control" />
+            <label class="form-label" for="username">Group Name</label>
+        </div>
+        <!-- Submit button -->
+        <button type="button" class="btn btn-primary btn-block mb-4" (click)="removeGroup()">Remove Group</button>
+    </form>
+    <form>
+        <h4>Remove User From Group:</h4>
+        <!-- Group name input -->
+        <div class="form-outline mb-4">
+            <input type="text" [(ngModel)]="addGroupObj.groupName" name="groupName" id="groupName" class="form-control" />
+            <label class="form-label" for="username">Group Name</label>
+        </div>
+        <!-- Username input -->
+        <div class="form-outline mb-4">
+            <input type="text" [(ngModel)]="addGroupObj.userName" name="username" id="username" class="form-control" />
+            <label class="form-label" for="username">Username</label>
+        </div>
+        <!-- Submit button -->
+        <button type="button" class="btn btn-primary btn-block mb-4" (click)="removeUserFromGroup()">Remove User from Group</button>
+    </form>
+    <form>
+        <h4>Remove Channel From Group:</h4>
+        <!-- Group name input -->
+        <div class="form-outline mb-4">
+            <input type="text" [(ngModel)]="addGroupObj.groupName" name="groupName" id="groupName" class="form-control" />
+            <label class="form-label" for="username">Group Name</label>
+        </div>
+        <!-- Username input -->
+        <div class="form-outline mb-4">
+            <input type="text" [(ngModel)]="addGroupObj.channel" name="username" id="username" class="form-control" />
+            <label class="form-label" for="username">Channel</label>
+        </div>
+        <!-- Submit button -->
+        <button type="button" class="btn btn-primary btn-block mb-4" (click)="removeChannelFromGroup()">Remove Channel</button>
+    </form>
     
 </div>
 
