@@ -13,6 +13,7 @@
             </li>
         </ul>
     <form>
+        <h4>Add User:</h4>
         <!-- Username input -->
         <div class="form-outline mb-4">
             <input type="text" [(ngModel)]="addUserObj.username" name="username" id="username" class="form-control" />
@@ -28,5 +29,56 @@
         <!-- Submit button -->
         <button type="button" class="btn btn-primary btn-block mb-4" (click)="addUser()">Add User</button>
     </form>
+    <form>
+        <h4>Remove User:</h4>
+        <!-- Username input -->
+        <div class="form-outline mb-4">
+            <input type="text" [(ngModel)]="addUserObj.username" name="username" id="username" class="form-control" />
+            <label class="form-label" for="username">Username</label>
+        </div>
+        <!-- Submit button -->
+        <button type="button" class="btn btn-primary btn-block mb-4" (click)="removeUser()">Remove User</button>
+    </form>
+    <form>
+        <h4>Add Group:</h4>
+        <!-- Group name input -->
+        <div class="form-outline mb-4">
+            <input type="text" [(ngModel)]="addGroupObj.groupName" name="groupName" id="groupName" class="form-control" />
+            <label class="form-label" for="username">Group Name</label>
+        </div>
+        <!-- Submit button -->
+        <button type="button" class="btn btn-primary btn-block mb-4" (click)="addGroup()">Add Group</button>
+    </form>
+    <form>
+        <h4>Add User To Group:</h4>
+        <!-- Group name input -->
+        <div class="form-outline mb-4">
+            <input type="text" [(ngModel)]="addGroupObj.groupName" name="groupName" id="groupName" class="form-control" />
+            <label class="form-label" for="username">Group Name</label>
+        </div>
+        <!-- Username input -->
+        <div class="form-outline mb-4">
+            <input type="text" [(ngModel)]="addGroupObj.userName" name="username" id="username" class="form-control" />
+            <label class="form-label" for="username">Username</label>
+        </div>
+        <!-- Submit button -->
+        <button type="button" class="btn btn-primary btn-block mb-4" (click)="addUserToGroup()">Add User to Group</button>
+    </form>
+    <form>
+        <h4>Add Channel To Group:</h4>
+        <!-- Group name input -->
+        <div class="form-outline mb-4">
+            <input type="text" [(ngModel)]="addGroupObj.groupName" name="groupName" id="groupName" class="form-control" />
+            <label class="form-label" for="username">Group Name</label>
+        </div>
+        <!-- Username input -->
+        <div class="form-outline mb-4">
+            <input type="text" [(ngModel)]="addGroupObj.channel" name="username" id="username" class="form-control" />
+            <label class="form-label" for="username">Channel</label>
+        </div>
+        <!-- Submit button -->
+        <button type="button" class="btn btn-primary btn-block mb-4" (click)="addChannelToGroup()">Add Channel</button>
+    </form>
+    
 </div>
 

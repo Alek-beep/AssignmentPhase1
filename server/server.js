@@ -12,6 +12,8 @@ app.use(express.json());
 
 // json file
 var myJson = require('../src/assets/users.json');
+var myGroups = require('../src/assets/groups.json');
+console.log(myGroups);
 
 var fs = require('fs');
 
@@ -83,7 +85,93 @@ app.post('/api/add', function(req, res){
         });
         res.send({"valid": true});
     }
-     
 });
+
+app.post('/api/remove_user', function(req, res){
+    console.log("removing user...");
+    if (!req.body){
+        return res.sendStatus(400);
+    }
+    Users = JSON.parse(JSON.stringify(myJson));
+    for(var i=0; i<Users.length;i++){
+        if(Users[i].username==req.body.username){
+            Users.splice(i, 1);
+            console.log(Users);
+            res.send({"valid": true});
+        }
+    }
+    console.log("User Not Found, cannot remove");
+    res.send({"valid": false});
+    
+});
+
+app.post('/api/add_group', function(req, res){
+    console.log("adding group...");
+    if (!req.body){
+        return res.sendStatus(400);
+    }
+    Groups = JSON.parse(JSON.stringify(myGroups));
+    var element = {
+        name:req.body.groupName,
+        users:[],
+        channels:[{channelName: "", users:[]}]
+    }
+    Groups.push(element);
+    toWrite = JSON.stringify(Groups);
+    console.log(Groups);
+    fs.writeFile("../src/assets/groups.json", toWrite, function(err) {
+        if (err){
+            console.log(err);
+        }
+    });
+    res.send({"valid": true});
+});
+
+app.post('/api/add_user_to_group', function(req, res){
+    console.log("adding user to group...");
+    if (!req.body){
+        return res.sendStatus(400);
+    }
+    Groups = JSON.parse(JSON.stringify(myGroups));
+    console.log(Groups);
+    for(var i=0; i<Groups.length;i++){
+        if(Groups[i].name==req.body.groupName){
+            Groups[i].users.push(req.body.userName);
+            console.log(Groups);
+            toWrite = JSON.stringify(Groups);
+            fs.writeFile("../src/assets/groups.json", toWrite, function(err) {
+                if (err){
+                    console.log(err);
+                }
+            });
+            res.send({"valid": true});
+        }
+    }
+    res.send({"valid":false});
+});
+
+app.post('/api/add_channel_to_group', function(req, res){
+    console.log("adding user to group...");
+    if (!req.body){
+        return res.sendStatus(400);
+    }
+    Groups = JSON.parse(JSON.stringify(myGroups));
+    console.log(Groups);
+    for(var i=0; i<Groups.length;i++){
+        if(Groups[i].name==req.body.groupName){
+            Groups[i].channels.push({channelName:req.body.channel, users:[]});
+            console.log(Groups[i].channels);
+            toWrite = JSON.stringify(Groups);
+            fs.writeFile("../src/assets/groups.json", toWrite, function(err) {
+                if (err){
+                    console.log(err);
+                }
+            });
+            res.send({"valid": true});
+        }
+    }
+    res.send({"valid":false});
+});
+
 
 
