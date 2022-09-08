@@ -28,38 +28,33 @@ app.post('/api/auth', function(req, res){
     let Users = [
         {
             username: 'Alek',
-            birthdate: '02-09-1999',
-            age: 23,
             email: 'alek.karoli@gmail.com',
-            password: 'password1',
-            valid: true
+            ID: 1,
+            Role: "User",
         },
         {
             username: 'Riley',
-            birthdate: '04-03-1999',
-            age: 23,
             email: 'riley.woltmann@gmail.com',
-            password: 'password2',
-            valid: true
+            ID: 2,
+            Role: "Super Admin",
         },
         {
             username: 'Ally',
-            birthdate: '05-02-1998',
-            age: 23,
             email: 'ally.ellis@gmail.com',
-            password: 'password3',
-            valid: true
+            ID: 3,
+            Role: "Group Admin",   
         }
     ]
     var checkUser = {};
+    //console.log(req.body);
     checkUser.email = req.body.email;
-    checkUser.password = req.body.password;
+    checkUser.username = req.body.username;
     
-    let foundUser = Users.find(user => user.email === checkUser.email && user.password == checkUser.password);
-    console.log(foundUser);
+    let foundUser = Users.find(user => user.username === checkUser.username && user.email == checkUser.email);
+    //console.log(foundUser);
     if(foundUser){
         console.log("Success");
-        console.log(foundUser);
+        //console.log(foundUser);
         res.send({"valid": true});
     }else{
         console.log("Incorrect Details");

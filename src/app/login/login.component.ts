@@ -17,8 +17,7 @@ const BACKEND_URL = 'http://localhost:3000';
 })
 
 export class LoginComponent implements OnInit {
-  userpwd = {email: "", password: ""};
-  userobj = {username: "", userbirthdate: "", userage: "", email: this.userpwd.email, password: this.userpwd.password};
+  userpwd = {email: "", username: ""};
   constructor(private router: Router, private http: HttpClient) { }
 
   ngOnInit(): void {
@@ -26,15 +25,13 @@ export class LoginComponent implements OnInit {
   
   public login(){
     
-    console.log(this.userpwd);
+    
     this.http.post('http://localhost:3000/api/auth', this.userpwd)
       .subscribe((data: any) => {
-        alert(JSON.stringify(this.userpwd));
+        //alert(JSON.stringify(this.userpwd));
         if(data.valid){
-          sessionStorage.setItem('username', this.userobj.username.toString());
-          sessionStorage.setItem('email', this.userpwd.email);
-          sessionStorage.setItem('birthdate', this.userobj.userbirthdate.toString());
-          sessionStorage.setItem('age', this.userobj.userage.toString());
+          localStorage.setItem('username', this.userpwd.username);
+          localStorage.setItem('email', this.userpwd.email);
           this.router.navigateByUrl('account');
         }else{
           alert("sorry, email or password not valid");

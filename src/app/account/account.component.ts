@@ -6,11 +6,14 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./account.component.css']
 })
 export class AccountComponent implements OnInit {
-  userobj = {username: sessionStorage.getItem('username'), userbirthdate: sessionStorage.getItem('birthdate'), userage: sessionStorage.getItem('age')
-  , email: sessionStorage.getItem('email')};
+  userobj = {username: localStorage.getItem('username'), email: localStorage.getItem('email')};
+  visibility = "hidden";
   constructor() { }
 
   ngOnInit(): void {
+    if(this.userobj.username!=null&&this.userobj.email!=null){
+      this.visibility="visible";
+    }
   }
 
 }
