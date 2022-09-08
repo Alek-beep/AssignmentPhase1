@@ -27,6 +27,15 @@ var server = http.listen(3000, function(){
     console.log("Server listening on port 3000");
 });
 
+app.post('/api/viewUsers', function(req, res){
+    Users = JSON.stringify(myJson);
+    res.send(Users);
+});
+app.post('/api/viewGroups', function(req, res){
+    Groups = JSON.stringify(myGroups);
+    res.send(Groups);
+});
+
 app.post('/api/auth', function(req, res){
     console.log("postlogin here");
     console.log(req.body.email);

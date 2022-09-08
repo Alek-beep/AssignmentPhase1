@@ -5,11 +5,12 @@ import { LoginComponent } from './login/login.component';
 import { ProfileComponent } from './profile/profile.component';
 import { ChatComponent } from './chat/chat.component';
 
+
 const routes: Routes = [
   {path:'login', component:LoginComponent},
   {path:'account', component:AccountComponent},
   {path:'profile', component:ProfileComponent},
-  {path:'chat', component:ChatComponent},
+  {path:'chat', component:ChatComponent}
 ];
 
 @NgModule({
