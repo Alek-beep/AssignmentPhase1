@@ -38,28 +38,7 @@ export class LoginComponent implements OnInit {
           alert("sorry, email or password not valid");
         }
       })
-    
-    
-    /*
-      .subscribe((data: any)=>{
-        console.log(emailPassword);
-        if (data.ok){
-          console.log("ok");
-        }else{
-          console.log("not ok");
-        }
-      });
-    
-    if(this.email=="test.1@gmail.com" && this.password == "password"){
-      this.router.navigateByUrl('/account');
-    }else if(this.email=="test.2@gmail.com" && this.password == "password2"){
-      this.router.navigateByUrl('/account');
-    }else if(this.email=="test.3@gmail.com" && this.password == "password3"){
-      this.router.navigateByUrl('/account');
-    }else{
-      alert("Email Or Password Incorrect!");
-    }
-    */
+      
   }
 
 }

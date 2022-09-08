@@ -8,6 +8,25 @@
             <li>
                 <h3>Email: {{userobj.email}}</h3>
             </li>
+            <li>
+                <h3>Role: {{userobj.role}}</h3>
+            </li>
         </ul>
+    <form>
+        <!-- Username input -->
+        <div class="form-outline mb-4">
+            <input type="text" [(ngModel)]="addUserObj.username" name="username" id="username" class="form-control" />
+            <label class="form-label" for="username">Username</label>
+        </div>
+
+        <!-- Email input -->
+        <div class="form-outline mb-4">
+            <input type="email" [(ngModel)]="addUserObj.email" name="email" id="email" class="form-control" />
+            <label class="form-label" for="email">Email address</label>
+        </div>
+
+        <!-- Submit button -->
+        <button type="button" class="btn btn-primary btn-block mb-4" (click)="addUser()">Add User</button>
+    </form>
 </div>
 
