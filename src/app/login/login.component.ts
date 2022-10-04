@@ -24,6 +24,8 @@ export class LoginComponent implements OnInit {
   }
   
   public login(){
+    
+    
     this.http.post('http://localhost:3000/api/auth', this.userpwd)
       .subscribe((data: any) => {
         //alert(JSON.stringify(this.userpwd));
@@ -36,5 +38,7 @@ export class LoginComponent implements OnInit {
           alert("sorry, email or password not valid");
         }
       })
+      
   }
+
 }
