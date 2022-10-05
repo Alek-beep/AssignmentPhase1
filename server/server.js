@@ -15,18 +15,11 @@ app.use(cors());
 app.use(express.urlencoded({extended:true}));
 app.use(express.json());
 
-// json file
-//var myJson = require('../src/assets/users.json');
-
-//var myGroups = require('../src/assets/groups.json');
-//console.log(myGroups);
-
 var fs = require('fs');
 
 // point static path to dist to serve angular webpage
 app.use(express.static(__dirname + "/../dist/week4tut"));
-//console.log(__dirname);
-//console.log(myJson);
+
 
 MongoClient.connect(url, { useNewUrlParser: true, useUnifiedTopology: true},function(err, client){
     //Callback function code. When we have a connection start the rest of the app.
@@ -40,17 +33,6 @@ MongoClient.connect(url, { useNewUrlParser: true, useUnifiedTopology: true},func
             res.send(data);
         })
     })
-
-    app.post('/api/viewUsers', function(req, res){
-        Users = JSON.stringify(myJson);
-        res.send(Users);
-    });
-
-
-    app.post('/api/viewGroups', function(req, res){
-        Groups = JSON.stringify(myGroups);
-        res.send(Groups);
-    });
     
     app.post('/api/auth', function(req, res){
         console.log("postlogin here");
@@ -83,42 +65,13 @@ MongoClient.connect(url, { useNewUrlParser: true, useUnifiedTopology: true},func
                     if (err) throw err;
                     let num = dbres.insertedCount;
                     //send back ti client number of items inserted and no error message
-                    res.send({num:0,err:"null"});
+                    res.send({num:0,err:"null",valid:true});
                 })
             } else {
-                res.send({num:0, err:"duplicate item"});
+                res.send({num:0, err:"duplicate item", valid:false});
             }
         });
-        /*
-        Users = JSON.parse(JSON.stringify(myJson));
-    
-        var checkUser = {};
-        checkUser.username = req.body.username;
-        
-        let foundUser = Users.find(user => user.username === checkUser.username);
-        if(foundUser){
-            console.log("User Found, cannot add");
-            res.send({"valid": false});
-        }else{
-            var element = {};
-            element.username = req.body.username;
-            element.email = req.body.email;
-            element.Id = 4;
-            element.Role = "User";
-            Users.push(element);
-    
-    
-           
-            toWrite = JSON.stringify(Users);
-            console.log(toWrite);
-            fs.writeFile("../src/assets/users.json", toWrite, function(err) {
-                if (err){
-                    console.log(err);
-                }
-            });
-            res.send({"valid": true});
-        }*/
-
+       
     });
     
     app.post('/api/remove_user', function(req, res){
@@ -127,25 +80,20 @@ MongoClient.connect(url, { useNewUrlParser: true, useUnifiedTopology: true},func
         if (!req.body){
             return res.sendStatus(400);
         }
-        Users = JSON.parse(JSON.stringify(myJson));
-        for(var i=0; i<Users.length;i++){
-            if(Users[i].username==req.body.username){
-                Users.splice(i, 1);
-                toWrite = JSON.stringify(Users);
-                console.log(Users);
-                fs.writeFile("../src/assets/users.json", toWrite, function(err) {
-                if (err){
-                    console.log(err);
-                }
-                });
-                complete = true;
-                res.send({"valid": true});
+
+        userName = req.body.username;
+        const collection = db.collection('users');
+        collection.find({'username':userName}).count((err, count)=>{
+            console.log(count);      
+            if(count!=0){
+                collection.deleteOne({'username':userName},(err,docs)=>{
+                    if (err) throw err;
+                    res.send({num:0,err:"null",valid:true});
+                })
+            } else {
+                res.send({num:0, err:"duplicate item", valid:false});
             }
-        }
-        console.log("User Not Found, cannot remove");
-        if(!complete){
-            res.send({"valid": false});
-        }
+        });
         
     });
     

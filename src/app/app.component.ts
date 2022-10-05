@@ -35,4 +35,10 @@ export class AppComponent implements OnInit {
     this.router.navigateByUrl("/login");
   }
 
+  public showUsers(){
+    this.userdata.getlist().subscribe((data)=>{
+      console.log(data);
+     });
+  }
+
 }

@@ -16,7 +16,7 @@ import { Router } from '@angular/router';
 })
 export class AccountComponent implements OnInit {
   userobj = {username: localStorage.getItem('username'), email: localStorage.getItem('email'), role: localStorage.getItem('role')};
-  addUserObj = {username: "", email: ""};
+  addUserObj = {username: "", email: "", id:2, role:"User"};
   addGroupObj = {groupName : "", userName:"", channel:""};
   visibility = "hidden";
   addUserVisibility = "hidden";
@@ -29,6 +29,7 @@ export class AccountComponent implements OnInit {
   }
 
   public addUser(){
+    this.addUserObj.id = Math.floor(Math.random() * 1000);
     if(this.userobj.role== "Super Admin" || this.userobj.role == "Group Admin"){
       this.http.post('http://localhost:3000/api/add', this.addUserObj)
       .subscribe((data: any) => {
