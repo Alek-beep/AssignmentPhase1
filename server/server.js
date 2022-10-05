@@ -58,23 +58,12 @@ MongoClient.connect(url, { useNewUrlParser: true, useUnifiedTopology: true},func
         if (!req.body){
             return res.sendStatus(400);
         }
-    
-        Users = JSON.parse(JSON.stringify(myJson));
-    
-        var checkUser = {};
-        console.log(req.body.username);
-        checkUser.email = req.body.email;
-        checkUser.username = req.body.username;
+        const collection = db.collection('users');
         
-        let foundUser = Users.find(user => user.username === checkUser.username && user.email == checkUser.email);
-        //console.log(foundUser);
-        if(foundUser){
-            console.log("Success");
-            res.send({"valid": true, "Role": foundUser.Role});
-        }else{
-            console.log("Incorrect Details");
-            res.send({"valid": false});
-        }
+        collection.find({email:req.body.email}).toArray((err, data)=>{
+            console.log(data);
+            res.send(data[0]);
+        })
          
     });
     

@@ -31,8 +31,8 @@ export class LoginComponent implements OnInit {
     this.http.post('http://localhost:3000/api/auth', this.userpwd)
       .subscribe((data: any) => {
         //alert(JSON.stringify(this.userpwd));
-        if(data.valid){
-          localStorage.setItem('role', data.Role);
+        if(data != null){
+          localStorage.setItem('role', data.role);
           localStorage.setItem('username', this.userpwd.username);
           localStorage.setItem('email', this.userpwd.email);
           this.router.navigateByUrl('account');
