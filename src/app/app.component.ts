@@ -41,4 +41,10 @@ export class AppComponent implements OnInit {
      });
   }
 
+  public showGroups(){
+    this.userdata.getlistGroups().subscribe((data)=>{
+      console.log(data);
+     });
+  }
+
 }

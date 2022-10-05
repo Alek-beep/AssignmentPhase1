@@ -1,6 +1,6 @@
 import { Component, ViewChild, OnInit } from '@angular/core';
 import {HttpClient, HttpHeaders} from '@angular/common/http';
-
+import {GroupModel} from '../groupModel';
 const httpOptions = {
   headers: new HttpHeaders({ 'Content-Type': 'application/json'})
 };
@@ -18,6 +18,8 @@ export class AccountComponent implements OnInit {
   userobj = {username: localStorage.getItem('username'), email: localStorage.getItem('email'), role: localStorage.getItem('role')};
   addUserObj = {username: "", email: "", id:2, role:"User"};
   addGroupObj = {groupName : "", userName:"", channel:""};
+  newGroup: any;
+  newUser: any;
   visibility = "hidden";
   addUserVisibility = "hidden";
   constructor(private router: Router, private http: HttpClient) { }
@@ -106,7 +108,8 @@ export class AccountComponent implements OnInit {
   
   public addGroup(){
     if(this.userobj.role== "Super Admin" || this.userobj.role == "Group Admin"){
-      this.http.post('http://localhost:3000/api/add_group', this.addGroupObj)
+      this.newGroup = new GroupModel(this.addGroupObj.groupName, [], []);
+      this.http.post('http://localhost:3000/api/add_group', this.newGroup)
       .subscribe((data: any) => {
         if(data.valid){
           alert("Group Added");
