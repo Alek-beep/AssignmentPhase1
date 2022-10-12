@@ -1,6 +1,7 @@
 import { Component, ViewChild, OnInit } from '@angular/core';
 import {HttpClient, HttpHeaders} from '@angular/common/http';
 import {GroupModel} from '../groupModel';
+import {ChannelModel} from '../channelModel';
 const httpOptions = {
   headers: new HttpHeaders({ 'Content-Type': 'application/json'})
 };
@@ -17,9 +18,11 @@ import { Router } from '@angular/router';
 export class AccountComponent implements OnInit {
   userobj = {username: localStorage.getItem('username'), email: localStorage.getItem('email'), role: localStorage.getItem('role')};
   addUserObj = {username: "", email: "", id:2, role:"User"};
-  addGroupObj = {groupName : "", userName:"", channel:""};
+  addGroupObj = {groupName : "", userName:"", channel:"", channelObject:[]};
   newGroup: any;
   newUser: any;
+  newChannel:any;
+  channelData = [];
   visibility = "hidden";
   addUserVisibility = "hidden";
   constructor(private router: Router, private http: HttpClient) { }
@@ -138,6 +141,9 @@ export class AccountComponent implements OnInit {
   }
 
   public addChannelToGroup(){
+    this.newChannel = new ChannelModel(this.addGroupObj.channel, []);
+    this.addGroupObj.channelObject = this.newChannel;
+    
     if(this.userobj.role== "Super Admin" || this.userobj.role == "Group Admin"){
       this.http.post('http://localhost:3000/api/add_channel_to_group', this.addGroupObj)
       .subscribe((data: any) => {

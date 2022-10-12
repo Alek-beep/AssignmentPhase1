@@ -9,8 +9,6 @@ const url = "mongodb://localhost:27017";
 var cors = require('cors');
 app.use(cors());
 
-
-
 // body parser 
 app.use(express.urlencoded({extended:true}));
 app.use(express.json());
@@ -20,12 +18,11 @@ var fs = require('fs');
 // point static path to dist to serve angular webpage
 app.use(express.static(__dirname + "/../dist/week4tut"));
 
-
 MongoClient.connect(url, { useNewUrlParser: true, useUnifiedTopology: true},function(err, client){
     //Callback function code. When we have a connection start the rest of the app.
     if(err){return console.log(err)}
     const dbName = 'mydb';
-    const db = client.db(dbName)
+    const db = client.db(dbName);
     app.get('/api/getlist', function(req, res){
         const collection = db.collection('users');
         collection.find({}).toArray((err, data)=>{
@@ -134,85 +131,83 @@ MongoClient.connect(url, { useNewUrlParser: true, useUnifiedTopology: true},func
         if (!req.body){
             return res.sendStatus(400);
         }
-        Groups = JSON.parse(JSON.stringify(myGroups));
-        for(var i=0; i<Groups.length;i++){
-            if(Groups[i].name==req.body.groupName){
-                Groups.splice(i, 1);
-                toWrite = JSON.stringify(Groups);
-                console.log(Groups);
-                fs.writeFile("../src/assets/groups.json", toWrite, function(err) {
-                if (err){
-                    console.log(err);
-                }
-                });
-                complete = true;
-                res.send({"valid": true});
+
+        groupName = req.body.groupName;
+        console.log(groupName);
+        const collection = db.collection('groups');
+        //collection.deleteMany({});
+        //res.send({num:0,err:"null",valid:true});
+        collection.find({'name':groupName}).count((err, count)=>{
+            console.log(count);      
+            if(count!=0){
+                collection.deleteOne({'name':groupName},(err,docs)=>{
+                    if (err) throw err;
+                    res.send({num:0,err:"null",valid:true});
+                })
+            } else {
+                res.send({num:0, err:"duplicate item", valid:false});
             }
-        }
-        if(!complete){
-            res.send({"false": true});
-        }
+        });
     });
     
     app.post('/api/remove_user_from_group', function(req, res){
-        complete = false;
         console.log("removing user from group...");
         if (!req.body){
             return res.sendStatus(400);
         }
-        Groups = JSON.parse(JSON.stringify(myGroups));
-        for(var i=0; i<Groups.length;i++){
-            if(Groups[i].name==req.body.groupName){
-                for(var j=0; j<Groups[i].users.length;j++){
-                    if(Groups[i].users[j]==req.body.userName){
-                        Groups[i].users.splice(j,1);
-                        toWrite = JSON.stringify(Groups);
-                        console.log(Groups);
-                        fs.writeFile("../src/assets/groups.json", toWrite, function(err) {
-                        if (err){
-                        console.log(err);
-                        }
-                        });
-                        complete=true;
-                        res.send({"valid":true});
+        groupName = req.body.groupName;
+        userName = req.body.userName;
+        const userCollection = db.collection('users');
+        const groupCollection = db.collection('groups');
+        userCollection.find({'username':userName}).toArray((err, data)=>{
+            user = data;
+            groupCollection.find({'name':groupName}).toArray((err, data)=>{
+                group = data;
+                usersList = group[0].users;
+                for (let i = 0; i < usersList.length; i++) {
+                    if(usersList[i][0].username == userName){
+                        console.log("renmoving: ");
+                        console.log(usersList[i][0].username);
+                        usersList.splice(i, 1);
                     }
-                }
-            }
-        }
-        if(!complete){
-            res.send({"false": true});
-        }
+                  }
+                console.log(usersList);
+                groupCollection.update({'name':groupName},{$set:{'users':usersList}});
+                console.log(groupName);
+                console.log("users:");
+            })
+        })
     });
     
     app.post('/api/remove_channel_from_group', function(req, res){
-        complete = false;
         console.log("removing channel from group...");
         if (!req.body){
             return res.sendStatus(400);
         }
-        Groups = JSON.parse(JSON.stringify(myGroups));
-        for(var i=0; i<Groups.length;i++){
-            if(Groups[i].name==req.body.groupName){
-                for(var j=0; j<Groups[i].channels.length;j++){
-                        if(Groups[i].channels[j].channelName==req.body.channel){
-                            Groups[i].channels.splice(j,1);
-                            console.log(Groups[i].channels);
-                        }
-                        toWrite = JSON.stringify(Groups);
-                        console.log(Groups);
-                        fs.writeFile("../src/assets/groups.json", toWrite, function(err) {
-                        if (err){
-                        console.log(err);
-                        }
-                        });
-                        complete=true;
-                        res.send({"valid":true});
+        groupName = req.body.groupName;
+        channel = req.body.channel;
+        channelObject = req.body.channelObject;
+        const groupCollection = db.collection('groups');
+        groupCollection.find({'name':groupName}).toArray((err, data)=>{
+            group = data;
+            channelsList = group[0].channels;
+            for (let i = 0; i < channelsList.length; i++) {
+                if(channelsList[i].channelName == channel){
+                    console.log("removing: ");
+                    console.log(channelsList[i].channelName);
+                    channelsList.splice(i, 1);
                 }
-            }
-        }
-        if(!complete){
-           res.send({"false": true});
-        }
+              }
+            console.log(channelsList);
+            groupCollection.update({'name':groupName},{$set:{'channels':channelsList}});
+            console.log(groupName);
+            console.log("channels:");
+            groupCollection.find({'name':groupName}).toArray((err, data)=>{
+                updatedChannels = data[0].channels;
+                console.log(updatedChannels);
+            })
+            
+        })
     });
     
     app.post('/api/add_user_to_group', function(req, res){
@@ -226,11 +221,18 @@ MongoClient.connect(url, { useNewUrlParser: true, useUnifiedTopology: true},func
         const groupCollection = db.collection('groups');
         userCollection.find({'username':userName}).toArray((err, data)=>{
             user = data;
-            groupCollection.find({'groupName':groupName}).toArray((err, data)=>{
+            groupCollection.find({'name':groupName}).toArray((err, data)=>{
                 group = data;
-                console.log(user);
-                console.log(group);
-                
+                usersList = group[0].users;
+                usersList.push(user);
+                console.log(usersList);
+                groupCollection.update({'name':groupName},{$set:{'users':usersList}});
+                console.log(groupName);
+                console.log("users:");
+                groupCollection.find({'name':groupName}).toArray((err, data)=>{
+                    updatedUsers = data[0].users;
+                    console.log(updatedUsers);
+                })
             })
         })
        
@@ -238,31 +240,35 @@ MongoClient.connect(url, { useNewUrlParser: true, useUnifiedTopology: true},func
     });
     
     app.post('/api/add_channel_to_group', function(req, res){
-        complete = false;
-        console.log("adding user to group...");
+        console.log("adding channel to group...");
         if (!req.body){
             return res.sendStatus(400);
         }
-        Groups = JSON.parse(JSON.stringify(myGroups));
-        console.log(Groups);
-        for(var i=0; i<Groups.length;i++){
-            if(Groups[i].name==req.body.groupName){
-                Groups[i].channels.push({channelName:req.body.channel, users:[]});
-                console.log(Groups[i].channels);
-                toWrite = JSON.stringify(Groups);
-                fs.writeFile("../src/assets/groups.json", toWrite, function(err) {
-                    if (err){
-                        console.log(err);
-                    }
-                });
-                complete=true;
-                res.send({"valid": true});
-            }
-        }
-        if(!complete){
-         res.send({"valid":false});
-        }
+        groupName = req.body.groupName;
+        channel = req.body.channel;
+        channelObject = req.body.channelObject;
+        console.log(groupName);
         
+        
+        const groupCollection = db.collection('groups');
+    
+        groupCollection.find({'name':groupName}).toArray((err, data)=>{
+            completed = false;
+            group = data;
+            channelsList = group[0].channels;
+            channelsList.push(channelObject);
+            console.log(channelsList);
+            
+            groupCollection.update({'name':groupName},{$set:{'channels':channelsList}});
+                console.log(groupName);
+                console.log("channels:");
+            groupCollection.find({'name':groupName}).toArray((err, data)=>{
+                updatedChannels = data[0].channels;
+                console.log(updatedChannels);
+                
+                completed = true;
+            })
+        })
     });
 
     const http = require('http').Server(app);

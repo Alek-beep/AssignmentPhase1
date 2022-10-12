@@ -18,9 +18,17 @@ export class AppComponent implements OnInit {
 
   ngOnInit(): void {
     this.user1 = new UserModel("Riley", "riley.woltmann@gmail.com", 1, "Super Admin");
+    this.user2 = new UserModel("Andrew", "andrew.komonen@gmail.com", 2, "Group Admin");
     this.userdata.add(this.user1).subscribe((data)=>{
       if(data.err==null){
         console.log(this.user1, "was added");
+      }else{
+        console.log("not added");
+      }
+    });
+    this.userdata.add(this.user2).subscribe((data)=>{
+      if(data.err==null){
+        console.log(this.user2, "was added");
       }else{
         console.log("not added");
       }
