@@ -1,11 +1,10 @@
 # Documentation - Data Structures
-Git Repository URL : https://github.com/Alek-beep/AssignmentPhase1
+Git Repository URL : https://github.com/Alek-beep/AssignmentPhase2
 # Main Data Structures
-There are two main data structures for assignment phase 1. Both data structures are .json files for the storage of what should in the future be stored in relational tables. The first .json file is the users.json file which is used to store an array of JSON objects containing a username, email, id and role for each user. The other main data structure is a .json file which stores an Array of JSON objects for every group which contains the name of the group, all the users in that group and the channels for the group stored in their own nested array of JSON objects which includes the name for each channel along with the users that are in the respective channels.
-# The template for a single user is :
-[{"username":"User1","email":"user1@user.com","Id":4,"Role":"User"}]
-# The template for a group is :
-[{
-"name":"Group 1","users":["Alek"],
-"channels":[{"channelName":"Channel 2","users":["User1", "User2"]},]{"channelName":"Channel 1","users":["User1", "User2"]}]
-}]
+In assignment phase 2 I used mongoDB to store the data for in the assignment. There are two collections: users, and groups. These collections are collections of objects that go off of defined models in the source code.
+# Users
+A user has a template class called UserModel. A UserModel object is made up of a username, an email, an id, a role and a password. These attributes are all assignable in the constructor for the class. 
+# Channels
+A channel has a template class called ChannelModel. A ChannelModel object is made up of a channel name string and an array of user objects, each one being an instance of the UserModel class. These attributes are all assignable in the constructor for the class. 
+# Groups
+A group has a template class called Group Model. A GroupModel is made up of a name which is a string, an array of users, each user being an instance of the UserModel class, and an array of channels, each channel being an instance of the ChannelModel class. These attributes are all assignable in the constructor for the class. 
