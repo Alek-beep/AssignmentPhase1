@@ -3,6 +3,7 @@ import { NgForm } from '@angular/forms';
 import { Router } from '@angular/router';
 import { UserModel } from './userModel';
 import { UserServiceService } from '../app/user-service.service';
+import {HttpClient, HttpHeaders} from '@angular/common/http';
 
 @Component({
   selector: 'app-root',
@@ -14,7 +15,9 @@ export class AppComponent implements OnInit {
   user1:any;
   user2:any;
   user3:any;
-  constructor(private router: Router, private userdata:UserServiceService) { }
+  userName:any;
+  userpwd = {email: "", username: "", role:"", password:""};
+  constructor(private router: Router, private userdata:UserServiceService, private http: HttpClient) { }
 
   ngOnInit(): void {
     //this.user1 = new UserModel("Riley", "riley.woltmann@gmail.com", 1, "Super Admin", "password");
@@ -53,6 +56,26 @@ export class AppComponent implements OnInit {
     this.userdata.getlistGroups().subscribe((data)=>{
       console.log(data);
      });
+  }
+
+  public showChat(){
+    this.userName = localStorage.getItem('username');
+    this.userpwd.username = this.userName;
+    //console.log(this.userName);
+    this.http.post('http://localhost:3000/api/chat', this.userpwd)
+      .subscribe((data: any) => {
+        if(data!=null){
+          console.log("Back at chat component");
+          this.router.navigateByUrl("/chat");
+        } else {
+          console.log("Something Wrong!");
+        }
+        
+       
+      })
+
+    
+   
   }
 
  

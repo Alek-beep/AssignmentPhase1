@@ -1,5 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
+import { FormsModule } from '@angular/forms';
+import { SocketService } from '../services/socket.service';
 
 @Component({
   selector: 'app-chat',
@@ -9,18 +11,38 @@ import { Router } from '@angular/router';
 export class ChatComponent implements OnInit {
   username = localStorage.getItem("username");
   email = localStorage.getItem("email");
-  constructor(private router: Router) { }
+  password = localStorage.getItem("password");
+  messagecontent:string = "";
+  messages:string[] = [];
+  ioConnection:any;
+  newMessage:any = "";
+  constructor(private router: Router, private socketService:SocketService) { }
 
   ngOnInit(): void {
+    this.initIOConnection();
   }
 
-  enter(){
-    if(this.username != null && this.email != null){
-      alert("You may proceed to chat " + this.username + " !");
-    } else {
-      alert("You must log in to proceed!");
-      this.router.navigateByUrl("/login");
-    }
+  private initIOConnection(){
+    this.socketService.initSocket();
+    this.ioConnection = this.socketService.getMessage()
+      .subscribe((data)=>{
+        //add new message to messages array
+        this.newMessage = data;
+        this.messages.push(this.newMessage);
+      })
   }
+
+  chat(){
+
+    if(this.messagecontent!=""){
+      //check if there is a message to send
+      this.socketService.send(this.messagecontent);
+      this.messagecontent="";
+    }else{
+      console.log("no message");
+    }
+
+  }
+
 
 }

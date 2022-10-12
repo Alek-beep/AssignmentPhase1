@@ -21,5 +21,8 @@ export class UserServiceService {
   getlistGroups(){
     return this.http.get<any>('/api/getlistGroups');
   }
+  chatCheck(userName:any){
+    return this.http.post<any>('/api/chat', userName);
+  }
 
 }

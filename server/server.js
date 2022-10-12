@@ -7,7 +7,7 @@ const url = "mongodb://localhost:27017";
 
 // cross origin resource sharing
 var cors = require('cors');
-app.use(cors());
+
 
 // body parser 
 app.use(express.urlencoded({extended:true}));
@@ -18,6 +18,27 @@ var fs = require('fs');
 // point static path to dist to serve angular webpage
 app.use(express.static(__dirname + "/../dist/week4tut"));
 
+const http = require('http').Server(app);
+const io = require('socket.io')(http,{
+    cors: {
+        origin: "http://localhost:4200",
+        methods: ["Get", "POST"],
+    }
+});
+
+const sockets = require('./socket.js');
+const server = require('./listen.js');
+
+// Define server port
+const PORT = 3000;
+
+// express middleware
+app.use(cors());
+
+
+
+//Start server listening 
+// Mongo route handling
 MongoClient.connect(url, { useNewUrlParser: true, useUnifiedTopology: true},function(err, client){
     //Callback function code. When we have a connection start the rest of the app.
     if(err){return console.log(err)}
@@ -28,16 +49,44 @@ MongoClient.connect(url, { useNewUrlParser: true, useUnifiedTopology: true},func
         collection.find({}).toArray((err, data)=>{
             console.log(data);
             res.send(data);
-        })
-    })
+        });
+    });
 
     app.get('/api/getlistGroups', function(req, res){
         const collection = db.collection('groups');
         collection.find({}).toArray((err, data)=>{
             console.log(data);
             res.send(data);
+        });
+    });
+
+    app.post('/api/chat', function(req, res){
+        newName = '';
+        console.log("at chat new");
+        if (!req.body){
+            return res.sendStatus(400);
+        }
+        userName = req.body.username;
+        const collection = db.collection('groups');
+        collection.find({}).toArray((err, data)=>{
+            group = data;
+            usersList = group[0].users;
+            for (let i = 0; i < usersList.length; i++) {
+                if(usersList[i][0].username == userName){
+                    console.log("found user: ");
+                    console.log(usersList[i][0].username);
+                    channels = group[0].channels;
+                    console.log(channels[0].channelName);
+                    //setup socket
+                    sockets.connect(io, PORT, channels[0].channelName);
+                    res.send({valid:"true"});
+                    
+                }
+            }
         })
-    })
+    });
+
+    
     
     app.post('/api/auth', function(req, res){
         console.log("postlogin here");
@@ -139,8 +188,6 @@ MongoClient.connect(url, { useNewUrlParser: true, useUnifiedTopology: true},func
         groupName = req.body.groupName;
         console.log(groupName);
         const collection = db.collection('groups');
-        //collection.deleteMany({});
-        //res.send({num:0,err:"null",valid:true});
         collection.find({'name':groupName}).count((err, count)=>{
             console.log(count);      
             if(count!=0){
@@ -275,11 +322,8 @@ MongoClient.connect(url, { useNewUrlParser: true, useUnifiedTopology: true},func
         })
     });
 
-    const http = require('http').Server(app);
-    var server = http.listen(3000, function(){
-        console.log("Server listening on port 3000");
-    });
-
+    // start server listening for requests.
+    server.listen(http, PORT);
 })
 
 
