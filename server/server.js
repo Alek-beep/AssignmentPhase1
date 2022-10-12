@@ -47,9 +47,13 @@ MongoClient.connect(url, { useNewUrlParser: true, useUnifiedTopology: true},func
         }
         const collection = db.collection('users');
         
-        collection.find({email:req.body.email}).toArray((err, data)=>{
-            console.log(data);
-            res.send(data[0]);
+        collection.find({username:req.body.username}).toArray((err, data)=>{
+            if(data[0].password == req.body.password){
+                res.send(data[0]);
+            }else{
+                res.send(null);
+            }
+            
         })
          
     });

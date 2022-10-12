@@ -17,7 +17,7 @@ import { Router } from '@angular/router';
 })
 export class AccountComponent implements OnInit {
   userobj = {username: localStorage.getItem('username'), email: localStorage.getItem('email'), role: localStorage.getItem('role')};
-  addUserObj = {username: "", email: "", id:2, role:"User"};
+  addUserObj = {username: "", email: "", id:2, role:"User", password:"password"};
   addGroupObj = {groupName : "", userName:"", channel:"", channelObject:[]};
   newGroup: any;
   newUser: any;
